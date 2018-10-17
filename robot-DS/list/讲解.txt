@@ -1,0 +1,167 @@
+数据结构之链表，链表有单向链表和双向链表两种。
+单链表由一个或多个“元素”连接而成，元素由两部分组成，一个就是真正的数据部分，另一个是指针。
+假如我们存储的数据部分是int类型的，那么表示这个元素的类如下：
+class node{
+	int value;
+	node* next;
+};
+加入一图 cn_node_int_value.PNG
+假如我们存储的数据部分是std::string类型的，那么表示这个元素的类如下：
+class node{
+	std::string value;
+	node* next;
+};  
+加入一图 cn_node_string_value.PNG
+为了能够表示任意一种数据类型，使用C++的模板定义如下，
+template <typename T>
+class node{
+	T value;
+	node* next;
+};
+加入一图 cn_node_typenameT_value.PNG
+这篇文章是讲数据结构的，模板这一概念已经超出本文的内容，为简明起见以后我都假定每个元素中存储的数据类型都是int。
+单链表的指向性是单一的，即后一个元素中的指针只存储前一个元素的地址,而前一个元素中的指针不存储后一个的地址，这种链表就成为单链表，权威的定义是这样的，单向链表（插入链接 https://zh.wikipedia.org/wiki/%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8）（又名单链表、线性链表）是链表的一种，其特点是链表的链接方向是单向的，对链表的访问要通过从头部开始，依序往下读取。
+加入一图 cn_node_string_value.PNG
+下图是节点存储int值（数值是随机的）的单链表的全景图
+加入一图 cn_linked_list_node_all.PNG
+
+概述
+双向链表由一个或多个“元素”连接而成，元素由三部分组成，一个就是真正的数据部分，另一个是prevoius指针, 最后一个是next指针。
+假如我们存储的数据部分是int类型的，那么表示这个元素的类如下：
+class node{
+	int value;
+	node* prevoius;
+	node* next;
+
+};
+如下图cn_doubly_linkedlist_node_int_value.PNG
+假如我们存储的数据部分是std::string类型的，那么表示这个元素的类如下：
+class node{
+	std::string value;
+	node* prevoius;
+	node* next;
+	
+};  
+如下图cn_doubly_linkedlist_node_string_value.PNG
+为了能够表示任意一种数据类型，使用C++的模板定义如下，
+template <typename T>
+class node{
+	T value;
+	node* prevoius;
+	node* next;
+};
+如下图cn_doubly_linkedlist_node_typenameT_value.PNG
+这篇文章是讲数据结构的，模板这一概念已经超出本文的内容，为简明起见以后我都假定每个元素中存储的数据类型都是int。
+
+双向链表是链表中每一个元素结构中都会存储两个地址，其中一个存储它的前一个元素地址，另一个存储它的后一个元素地址，权威的定义是这样的，双向链表也叫双链表（插入链接 https://zh.wikipedia.org/wiki/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8），是链表的一种，它的每个数据结点中都有两个指针，分别指向直接后继和直接前驱。所以，从双向链表中的任意一个结点开始，都可以很方便地访问它的前驱结点和后继结点。一般我们都构造双向循环链表。
+见下图所示：cn_overall.PNG
+
+
+生成
+怎么生成一个双向链表呢？
+为了聚焦在数据结构的讲解，我不想涉及太多和语言相关的细节，并且假定这个链表不允许有重复元素，使用C语言来实现整个过程，至于C++语言，python, Javascript,php 的版本可以参考多个文章，定义以下函数，查找，删除，在起始结点之前插入，在起始节点之后插入，正向遍历，反向遍历
+
+struct node
+{
+  int value;
+  struct node *previous;
+  struct node *next;
+};
+
+
+struct node *
+find (struct node *begin, int val)
+{
+  if (!begin)
+    return NULL;
+  struct node *tmp = begin;
+  while (tmp)
+    {
+      if (tmp->value == val)
+	return tmp;
+      tmp = tmp->next;
+    }
+  return NULL;
+}
+
+void
+del (struct node *begin, int val)
+{
+  struct node *ret = find (begin, val);
+  if (ret && ret != begin)
+    {
+      struct node *n = ret->next;
+      struct node *p = ret->previous;
+      p->next = ret->next;
+      n->previous = ret->previous;
+      free (ret);
+      return;
+    }
+  else if (ret == begin)
+    {
+      struct node *n = ret->next;
+      n->previous = NULL;
+      free (n);
+      begin = ret->next;
+      return;
+    }
+  else
+    {
+
+    }
+}
+
+int
+insert_before (struct node **begin, int val)
+{
+  if (!begin)
+    return 0;
+  struct node *n = (*begin)->next;
+  struct node *tmp = malloc (sizeof (struct node));
+  tmp->value = val;
+  tmp->next = *begin;
+  tmp->previous = NULL;
+  (*begin)->previous = tmp;
+  *begin = tmp;
+  return 1;
+}
+
+int
+insert_after (struct node *begin, int val)
+{
+  if (!begin)
+    return 0;
+  struct node *n = begin->next;
+  struct node *tmp = malloc (sizeof (struct node));
+  tmp->value = val;
+  tmp->next = n;
+  tmp->previous = begin;
+  begin->next = tmp;
+  return 1;
+}
+
+void
+travl (struct node *begin)
+{
+  if (!begin)
+    return;
+  printf ("%d ", begin->value);
+  travl (begin->next);
+}
+
+void
+reverse_travl (struct node *begin)
+{
+  if (!begin)
+    return;
+  reverse_travl (begin->next);
+  printf ("%d ", begin->value);
+
+}
+
+操作
+	查询
+	删除
+	插入
+	遍历
+	

@@ -1,0 +1,92 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../robot-content-css.css" />
+<script type="text/javascript" src="control.js"></script>
+<meta http-equiv="Content-Type" content="text/html"; charset="utf-8">
+<title>
+通过ROS控制海龟机器人-1
+</title>
+</head>
+<body>
+<div class = 'robot-share-article-content'>
+<section hidden = 'hidden'>
+<img src = 'article-rose.png' width = 10% height = 10%/>
+</section>
+<section>
+	<h1 class = 'article-title'>通过ROS控制海龟机器人-1</h1> 
+	<section>
+		<p></p>
+    		<h2 class = 'sub-title-1'>阅读完成本文后您将收获</h2>
+    		<p class = 'article-real-content'><ui >
+							<li style="margin-left:2em; ">通过编写一个浏览器的网页即可操纵机器人<br></li>
+							<li style="margin-left:2em; ">对网络中广泛使用的长连接websocket协议有一定的认识<br></li>
+						</ui>
+		</p>
+  	</section>
+  <section>
+  <section>
+    <h2 class = 'sub-title-1'>简介</h2>
+    <p class = 'article-real-content'>机器人的开发技术一日千里，传统的开发模式是在机器人本体的工控机写应用程序，然后运行这个应用程序，调试，再运行，这是一种本体的native 方法，但是现在随着ROS的兴起，配合ROS出现的JS库也越来越流行，使用前端的技术开发一个机器人越来越方便。作者这里给大家推荐一个非常人性化的网站，这个网站专门介绍各种供机器人使用的工具，本文结合就以其中一个demo为例，演示如何从浏览器上控制一个模拟机器人的方法：</p>
+  </section>
+  <section>
+    <h2 class = 'sub-title-1'>预备知识和前提条件</h2>
+	<p class = 'article-real-content'>基本的web server知识和网络知识;理解ROS这个机器人操作系统，具体的需要一台装有ROS kinetic版本的ubuntu 16.04 PC;一台装有浏览器的PC，它与上一台PC处于联网，局域网或广域网都可以（不限制操作系统，当然也可共用那台ubuntu 16.04的PC）
+;在ubuntu 16.04上装有rosbridge package软件包－其中实现了websocket协议能实现网络间进程的双向通讯 
+	</p>
+    <p>根据维基百科</p>
+    <blockquote>
+       <h1>websocket</h1>
+       <p>WebSocket is a computer communications protocol, providing full-duplex communication channels over a single TCP connection. The WebSocket protocol was standardized by the IETF as RFC 6455 in 2011, and the WebSocket API in Web IDL is being standardized by the W3C.
+
+WebSocket is a different protocol from HTTP. Both protocols are located at layer 7 in the OSI model and, as such, depend on TCP at layer 4. Although they are different, RFC 6455 states that WebSocket "is designed to work over HTTP ports 80 and 443 as well as to support HTTP proxies and intermediaries" thus making it compatible with the HTTP protocol. To achieve compatibility, the WebSocket handshake uses the HTTP Upgrade header[1] to change from the HTTP protocol to the WebSocket protocol.
+
+The WebSocket protocol enables interaction between a web client (such as a browser) and a web server with lower overheads, facilitating real-time data transfer from and to the server. This is made possible by providing a standardized way for the server to send content to the client without being first requested by the client, and allowing messages to be passed back and forth while keeping the connection open. In this way, a two-way ongoing conversation can take place between the client and the server. The communications are done over TCP port number 80 (or 443 in the case of TLS-encrypted connections), which is of benefit for those environments which block non-web Internet connections using a firewall. Similar two-way browser-server communications have been achieved in non-standardized ways using stopgap technologies such as Comet.
+
+The WebSocket protocol is currently supported in most major browsers including Google Chrome, Microsoft Edge, Internet Explorer, Firefox, Safari and Opera. WebSocket also requires web applications on the server to support it. </p>
+    </blockquote>
+  </section>
+	<section>
+    		<h2 class = 'sub-title-1'>最终效果</h2>
+			<p class = 'article-real-content'>通过WASD四个按键控制海龟的截图(这里是目前该网站支持的 web tool清单，我选择其中的这个示例，它的github地址在这里 ,这是演示的截图)</p>
+			<center><p><img width = 80% height = 70% src = '../header-pic.png' alt = '海龟通过WASD四个按键控制'/></p></center>
+			<p class = 'article-real-content'>实际运行的视频(这个demo实现的效果是通过键盘的QWEASD这六个按键，控制一个万向轮机器人PR2在模拟环境下的运动，不过由于PR2在kinetic版本上没有支持的模拟器，所以这里我切换模拟turtlesim，也就是那个著名的“海龟”。实际的运行效果请看这个视频)</p>
+			<center><video width=80% height=60% src="http://www.youname.com/images/first.mp4" poster="http://www.youname.com/images/first.png"  preload="none" controls="controls"></video></center>
+	</section>
+	<section>
+		<h2 class = 'sub-title-1'>具体步骤</h2>
+			<p class = 'article-real-content'>关于网络和js库的修改
+从这里下载源代码，下载完成后，在example文件夹中需要修改web socket 地址，即修改init()函数中的localhost为192.168.188.137（这是作者的IP，读者根据自己的ip相应修改，从使用这个命令查看自己电脑的IP），修改后的源代码如下：
+
+这里需要特别注意下，由于当前robotwebtools网站服务器的故障，无法加载eventemitter2.js 和roslib.js ，我的解决办法是把依赖的库都下载到本地，读者可以直接从这里和这里分别下载使用，记得把路径修改正确。这是作者配置的路径关系</p>
+			<p class = 'article-real-content'>
+    关于机器人话题的修改
+
+由于我改用turtlesim机器人模拟，所以相应接受的topic(话题)也要修改，我在ubuntu上使用命令rosrun turtlesim turtlesim_node启动了turtlesim , 这个turtlesim使用的话题是turtle1/cmd_vel，具体原因见 这里
+
+         根据这篇中”海龟”订阅了”turtle/cmd_vel”话题，所以在keyboardteleop.html中要修改publish(发布)的话题，即在文件keyboardteleop.html 的 line 28 中，topic :/turtle1/cmd_vel’ 这里为什么是turtle1而不是turtle2,3，这个问题请读者思考下
+
+下面这个图片汇总了所有的修改点，帮助您理解</p>
+			<center><p><img width = 80% height = 70% src = '../header-pic.png' alt = '服务器中的文件夹结构'/></p></center>
+			<p class = 'article-real-content'>以上部分是都是关于js需要修改的内容，以下部分将是需要在机器人上启动的ROS package
+
+启动ubuntu的terminial,在终端输入roscore(这是所有ROS节点启动前必须启动的根节点，所有ROS节点都要依赖它)
+接下来，再启动一个terminial(快捷键是ctrl+alt+t),在这个终端我们启动rosbridge的功能，即输入 roslaunch rosbridge_server rosbridge_websocket.launch,接下来，再启动一个terminial, 在这个终端我们启动"海龟",即输入rosrun turtlesim turtlesim_node,
+下面这个截图就是在ubuntu上要启动的三个节点，读者可以参考</p>
+			<center><p><img width = 80% height = 70% src = '../header-pic.png' alt = '启动ROS节点效果截屏'/></p></center>
+	</section>	
+	<section>
+    		<h2 class = 'sub-title-1'>总结</h2>
+			<p class = 'article-real-content'>这篇文档给机器人开发者提供了一种新的途径-通过web来直接控制机器人，使用web方式控制机器人有以下几方面的优势</p>
+			<p class = 'article-real-content'><ui >
+							<li style="margin-left:2em; ">结合当前互联网前端的技术优势，改进机器人的人机交互能力<br></li>
+							<li style="margin-left:2em; ">规范用户到机器人之间的网络传输的方式<br></li>
+							<li style="margin-left:2em; ">降低机器人开发者的入门难度，吸引更多的开发者进入机器人行业<br></li>
+						</ui>
+			</p>
+	</section>
+</section>
+	<section>
+		<img src = 'article-bottom-line.png' width = 100% height = '20px'/>
+	</section>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../robot-content-css.css" />
+<script type="text/javascript" src="control.js"></script>
+<meta http-equiv="Content-Type" content="text/html"; charset="utf-8">
+<title>
+ROS自带navigate软件包中的global planner
+</title>
+</head>
+<body>
+<div class = 'robot-share-article-content'>
+<section hidden = 'hidden'>
+<img src = 'article-rose.png' width = 10% height = 10%/>
+</section>
+<section>
+	<h1 class = 'article-title'>ROS自带navigate软件包中的global planner</h1> 
+	<section>
+		<p></p>
+    		<h2 class = 'sub-title-1'>阅读完成本系列文章后您将收获</h2>
+    		<p class = 'article-real-content'><ui >
+							<li style="margin-left:2em; ">掌握基于ROS架构的全局路径规划方法<br></li>
+							<li style="margin-left:2em; ">可以编写自定义的全局路径规划，并替换ROS自带的方法<br></li>
+						</ui>
+		</p>
+  	</section>
+ <section>
+ <section>
+    	<h2 class = 'sub-title-1'>简介</h2>
+    	<p class = 'article-real-content'>ROS标准navigate stack中的move base 模块是实现机器人移动的最重要模块，该模块以可执行文件的形式存在，其作用类似客户端-服务器模式中服务器端的功能，当机器人的ROS包启动后，该模块进入等待回调的状态，等待着客户端的触发，navigation软件包功能非常丰富，代码量也很大，这篇文章只分析<a href = 'http://wiki.ros.org/base_local_planner?distro=kinetic'>base_local_planner</a> <a href = 'http://wiki.ros.org/costmap_2d?distro=kinetic'>costmap_2d</a> <a href = 'http://wiki.ros.org/global_planner?distro=kinetic'>global_planner</a>三个模块的相互关系，其余的模块的细节会在后续的文章中逐一讨论，这里以ros kinetic分支为例，从模块的源代码结构入手讨论</p>
+  </section>
+  	<section>
+    		<h2 class = 'sub-title-1'>预备知识和前提条件</h2>
+	<p class = 'article-real-content'>理解ROS机器人操作系统的基本概念; 使用ROS编写过一些简单程序（如通过键盘控制海龟机器人的移动）;一台装有ROS kinetic版本的ubuntu 16.04 PC; 机器人(模拟机器人）底盘是差速或全向轮机构的
+	</p>
+    	<p>根据ROS官方文档</p>
+    		<blockquote>
+       			<h1>package summary</h1>
+      			<p>A 2D navigation stack that takes in information from odometry, sensor streams, and a goal pose and outputs safe velocity commands that are sent to a mobile base.</p>
+    		</blockquote>
+		<blockquote>
+       			<p>这是一个二维空间内通过里程计，传感器数据流生成机器人全局位姿，并最终将机器人速度发送给机器人底盘的模块.</p>
+    		</blockquote>
+  </section>
+	<section>
+    		<h2 class = 'sub-title-1'>全局路径规划</h2>
+			<p class = 'article-real-content'>全局路径规划是机器人从A点移动B点的整体路径(见图1)，这个比较容易理解，试想如果没有全局路径，机器人怎么知道它要走的路径呢！对于二维平面上移动的机器人，根据右手法则它既没有绕X轴转动的roll,也没有绕Y轴转动的pitch,只有绕Z轴转动yaw(见图2) ，所以最终规划出来路径是一个点的集合，这些点以一定间隔离散地发布在这条路径，把这些点连接起来就是机器人的全局路径了，要注意的是这个“点”不仅包含x,y坐标值，还包含一个yaw的值(它来告诉机器人在这一点的正面朝向)。</p>
+			<center><p><img width = 50% height = 70% src = './nav_comic.png' alt = '机器人从A点移动到B点的全局路径'/></p></center>
+			<p class = 'article-real-content' align = 'center'>图1 机器人从A点移动到B点的全局路径(摘自http://wiki.ros.org/navigation)</p>
+			<center><p><img width = 50% height = 50% src = './Average-roll-pitch-and-yaw-angles.png.jpeg' alt = '右手法则下的空间坐标系和转向角示意图'/></p></center>
+			<p class = 'article-real-content' align = 'center'>图2 右手法则下的空间坐标系和转向角示意图</p>
+			<p class = 'article-real-content'>从代码里看，全局路径规划是单独运行在一个线程中，见move_base.cpp中84,85行所示，在<a href = 'ROS-global-plan-and-local-plan-2.htm'>下一篇</a>文章中将详细讨论全局路径是怎么生成的</p>
+			<div class = 'code_normal'>//set up the planner's thread <br> planner_thread_ = new boost::thread(boost::bind(&MoveBase::planThread, this));</div>
+			
+	</section>
+	<section>
+    		<h2 class = 'sub-title-1'>局部路径规划</h2>
+			<p class = 'article-real-content'>以我的理解，局部路径的规划比全局路径规划要复杂得多，也更难以理解，全局路径规划从理论上讲，机器人从A点移动到B点只要规划一次就够了，为什么这么说呢?毕竟只要知道机器人的路径就够了啊！当然不考虑机器人全局路径的好坏，的确是这样，但是让我们类比地设想一种情况，我要开车从丰台的A点去密云的B点，首先，我打开手机某度导航app，输入起点终点后，很快全局路径规划出来了，接下来，我愉快的出发了，但是众所周知，四环随时可能堵车，当我走到南四环时，突然堵车了，导航开始提示，有更快的路线被发现(再次开始全局路径规划)，这就是为什么全局路径规划不是执行一次而是周期性的重复规划的原因；而局部路径规划呢，还是上述的这个例子，我正在开车去密云的四环路上，正常情况下，我会沿着规划好的全局路径驾驶，但是突然前方路上出现了一个凸起的井盖，我会先看左后视镜，后看右后视镜，确认安全后稍微转动方向盘绕过井盖(这就是局部路径规划)，如果在堵车时有新的更快的全局路径被发现后，我的局部路径就要相应的变化，以确保我能更快的到达目的地B点，这二者之间的关系是，局部规划依赖于全局路径，它们对于机器人的安全、高效移动都必不可少。从代码角度看，局部路径规划也是运行在一个单独的进程中，见move_base.h的第64行和move_base.cpp的第58行</p>
+			<div class = 'code_normal'>// move_base.h <br>typedef actionlib::SimpleActionServer MoveBaseActionServer; </div>
+			<p class = 'code_normal'>//move_base.cpp <br>as_ = new MoveBaseActionServer(ros::NodeHandle(), "move_base", boost::bind(&MoveBase::executeCb, this, _1), false);</p>
+			<p class = 'article-real-content'>action::SimpleActionServer在simple_action_server_imp.h中 90行有定义</p>
+			<p class = 'code_normal'>//simple_action_server_impl.h <br>// create the action server
+  as_ = boost::shared_ptr<ActionServer<ActionSpec> >(new ActionServer<ActionSpec>(n, name,
+      boost::bind(&SimpleActionServer::goalCallback, this, _1),
+      boost::bind(&SimpleActionServer::preemptCallback, this, _1),
+      auto_start));
+
+  if (execute_callback_ != NULL) {
+    execute_thread_ = new boost::thread(boost::bind(&SimpleActionServer::executeLoop, this));
+  }</p>
+			<p　class = 'article-real-content'>最终局部路径规划运行在单独的线程中，MoveBaseActionServer中的executeLoop函数被MoveBase::executeCb替换</p>
+			
+	</section>
+
+
+
+
+
+	<section>
+		
+	</section>
+</section>
+	<section>
+		<img src = 'article-bottom-line.png' width = 100% height = '20px'/>
+	</section>
+</body>
+</html>
