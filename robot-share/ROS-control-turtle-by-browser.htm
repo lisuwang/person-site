@@ -48,16 +48,16 @@ The WebSocket protocol is currently supported in most major browsers including G
 	<section>
     		<h2 class = 'sub-title-1'>最终效果</h2>
 			<p class = 'article-real-content'>通过WASD四个按键控制海龟的截图(这里是目前该网站支持的 web tool清单，我选择其中的这个示例，它的github地址在这里 ,这是演示的截图)</p>
-			<center><p><img width = 80% height = 70% src = '../header-pic.png' alt = '海龟通过WASD四个按键控制'/></p></center>
+			<center><p><img  src = './keyboard.png' alt = '海龟通过WASD四个按键控制'/></p></center>
 			<p class = 'article-real-content'>实际运行的视频(这个demo实现的效果是通过键盘的QWEASD这六个按键，控制一个万向轮机器人PR2在模拟环境下的运动，不过由于PR2在kinetic版本上没有支持的模拟器，所以这里我切换模拟turtlesim，也就是那个著名的“海龟”。实际的运行效果请看这个视频)</p>
-			<center><video width=80% height=60% src="http://www.youname.com/images/first.mp4" poster="http://www.youname.com/images/first.png"  preload="none" controls="controls"></video></center>
+			<center><video width=80% height=60% src="./control_from_web.mp4" poster="./web_on_another_pc_and_turtlesim.jpg"  preload="none" controls="controls"></video></center>
 	</section>
 	<section>
 		<h2 class = 'sub-title-1'>具体步骤</h2>
 			<p class = 'article-real-content'>关于网络和js库的修改
 从这里下载源代码，下载完成后，在example文件夹中需要修改web socket 地址，即修改init()函数中的localhost为192.168.188.137（这是作者的IP，读者根据自己的ip相应修改，从使用这个命令查看自己电脑的IP），修改后的源代码如下：
 
-这里需要特别注意下，由于当前robotwebtools网站服务器的故障，无法加载eventemitter2.js 和roslib.js ，我的解决办法是把依赖的库都下载到本地，读者可以直接从这里和这里分别下载使用，记得把路径修改正确。这是作者配置的路径关系</p>
+这里需要特别注意下，由于当前robotwebtools网站服务器的故障，无法加载eventemitter2.js 和roslib.js ，我的解决办法是把依赖的库都下载到本地，读者可以直接从<a href = "./EventEmitter2.js">EventEmitter2.js</a>和<a href = "./roslib.js">roslib.js</a>分别下载使用，记得把路径修改正确。这是作者配置的路径关系</p>
 			<p class = 'article-real-content'>
     关于机器人话题的修改
 
@@ -66,13 +66,13 @@ The WebSocket protocol is currently supported in most major browsers including G
          根据这篇中”海龟”订阅了”turtle/cmd_vel”话题，所以在keyboardteleop.html中要修改publish(发布)的话题，即在文件keyboardteleop.html 的 line 28 中，topic :/turtle1/cmd_vel’ 这里为什么是turtle1而不是turtle2,3，这个问题请读者思考下
 
 下面这个图片汇总了所有的修改点，帮助您理解</p>
-			<center><p><img width = 80% height = 70% src = '../header-pic.png' alt = '服务器中的文件夹结构'/></p></center>
+			<center><p><img width = 80% height = 60% src = './web_and_folder_file.png' alt = '服务器中的文件夹结构'/></p></center>
 			<p class = 'article-real-content'>以上部分是都是关于js需要修改的内容，以下部分将是需要在机器人上启动的ROS package
 
 启动ubuntu的terminial,在终端输入roscore(这是所有ROS节点启动前必须启动的根节点，所有ROS节点都要依赖它)
 接下来，再启动一个terminial(快捷键是ctrl+alt+t),在这个终端我们启动rosbridge的功能，即输入 roslaunch rosbridge_server rosbridge_websocket.launch,接下来，再启动一个terminial, 在这个终端我们启动"海龟",即输入rosrun turtlesim turtlesim_node,
 下面这个截图就是在ubuntu上要启动的三个节点，读者可以参考</p>
-			<center><p><img width = 80% height = 70% src = '../header-pic.png' alt = '启动ROS节点效果截屏'/></p></center>
+			<center><p><img width = 80% height = 50% src = './robot_roslaunch_rosrun_roscore_capture.png' alt = '启动ROS节点效果截屏'/></p></center>
 	</section>	
 	<section>
     		<h2 class = 'sub-title-1'>总结</h2>
