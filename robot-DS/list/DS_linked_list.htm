@@ -1,88 +1,76 @@
 <!DOCTYPE html> 
 <head>
+	<link rel="stylesheet" type="text/css" href="../../robot-content-css.css" />
+	<script type="text/javascript" src="control.js"></script>
+	<meta http-equiv="Content-Type" content="text/html"; charset="utf-8">
 	<title>单向链表</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" href="css/blog.css">
 	<link rel="icon" href="pic/DS_small_icon.png" type="image/x-icon">
 </head>
 <body>
 <div class = 'robot-share-article-content'>
-<h1 style="text-align: center;">链表</h1>
+<section hidden = 'hidden'>
+<img src = 'article-rose.png' width = 10% height = 10%/>
+</section>
+<section>
+	<h1 class = 'article-title'>单链表</h1> 
+	<section>
+		<p></p>
+    		<h2 class = 'sub-title-1'>阅读完成本文后您将收获</h2>
+    		<p class = 'article-real-content'>
+						<ui>
+							<li style="margin-left:2em; ">完全掌握单链表这个重要的数据结构<br></li>
+							<li style="margin-left:2em; ">掌握单链表的各种操作<br></li>
+						</ui>
+			</p>
+  	</section>
+	<section>
+		<h2 class = 'sub-title-1'>定义</h2>
+		<p class = 'article-real-content'>单向链表也叫单链表，它由一个或多个&ldquo;元素&rdquo;连接而成，元素由两部分组成，一个就是真正的数据部分，另一个是指针。假如我们存储的数据部分是int类型的，那么表示这个元素的类如下：</p>
+		<div class = 'code_normal'>struct node{int value;node* next;};</div>
+	</section>
+	<section>
+		<h2 class = 'sub-title-1'>细节</h2>
+		<p class = 'article-real-content'>我们假定这个node在内存中类似下面这个图:</p>
+		<div class = 'code_normal'>struct node{int value;node* next;};</div>
+		<center><p><img width = 50% height = 70% alt="int类型的node" src="pic/cn_node_int_value.PNG"/></p></center>
+			<p class = 'article-real-content' align = 'center'>图1 一个在计算机内存中单链表的结点（数据部分是int类型的值）示意图</p>
+		<p class = 'article-real-content'>假如我们存储的数据部分是std::string类型的，那么表示这个元素的类如下：</p>
+		<div class = 'code_normal'>struct node{
 
-<h2>定义:</h2>
-<div class="Just_Tip">Patient man, can get what he wanted, give me 15 minutes</div>
-<div class="Des_Word">单向链表也叫单链表，它由一个或多个&ldquo;元素&rdquo;连接而成，元素由两部分组成，一个就是真正的数据部分，另一个是指针。假如我们存储的数据部分是int类型的，那么表示这个元素的类如下：</div>
+												std::string value;
 
-<div class="Code_C" id="real_code_node_int" lang="C">
-struct node{
+												node* next;
 
-int value;
+									};
+		</div>
+		<p class = 'article-real-content'>我们假定这个node在内存中类似下面这个图:</p>
+		<center><p><img width = 50% height = 70% alt="存储std::string类型的node" src="pic/cn_node_string_value.PNG"/></p></center>
+			<p class = 'article-real-content' align = 'center'>图2 一个在计算机内存中单链表（数据部分是string类型的值）的结点示意图</p>
+		<p class = 'article-real-content'>为了能够表示任意一种数据类型，使用C++的模板定义如下:</p>
+		<div class = 'code_normal'>template &lt;typename T&gt;
 
-node* next;
+									struct node{
 
-};</br>
-</div>
+													T value;
 
-<div class="Des_Word">我们假定这个node在内存中类似下面这个图:</div>
-<div class="wraptocenter">
-			<img class="centerImage" alt="int类型的node" src="pic/cn_node_int_value.PNG"  />
-</div>
-<div class="Des_Word">假如我们存储的数据部分是std::string类型的，那么表示这个元素的类如下：</div>
+													node* next;
 
+									};
+		</div>
+		
+		<p class = 'article-real-content'>我们假定这个node在内存中类似下面这个图:</p>
+		<center><p><img width = 50% height = 70% alt="存储任意类型的node" src="pic/cn_node_typenameT_value.PNG" /></p></center>
+			<p class = 'article-real-content' align = 'center'>图3 一个在计算机内存中单链表（数据部分是任意类型的值）的结点示意图</p>
+			
+		<p class = 'article-real-content'>这篇文章是讲数据结构的，模板这一概念已经超出本文的内容。为简明起见以后我都假定每个元素中存储的数据类型都是int。单链表的指向性是单一的，即后一个元素中的指针只存储前一个元素的地址,而前一个元素中的指针不存储后一个的地址，这种链表就成为单链表，权威的定义在<a href="https://zh.wikipedia.org/wiki/%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8" target="_blank">这里</a>,下图是节点存储int值（数值是随机的）的单链表的全景图，假设单链表在内存中起始地址为0x0001</p>
+		<center><p><img width = 80% height = 80% alt="单链表全景图" src="pic/cn_linked_list_node_all.PNG" /></p></center>
+			<p class = 'article-real-content' align = 'center'>图3 一个在计算机内存中由多个节点连接在一起的单链表示意图</p>
+			
+	</section>
+	<section>
+		<img src = '../../article-bottom-line.png' width = 100% height = '20px'/>
+	</section>
+</section>
 
-<p>
-
-<div class="Code_C" id="read_struct_string_node" lang="C">
-struct node{
-
-std::string value;
-
-node* next;
-
-};</br>
-</div>
-</p>
-<div class="Des_Word">我们假定这个node在内存中类似下面这个图:</div>
-
-<div class="wraptocenter">
-<img class="centerImage" alt="存储std::string类型的node" src="pic/cn_node_string_value.PNG" />        
-
-</div>
-
-<div class="Des_Word">为了能够表示任意一种数据类型，使用C++的模板定义如下:</div>
-
-<div class="Code_C" id="typenameT_node" lang="C">
-template &lt;typename T&gt;
-
-struct node{
-
-T value;
-
-node* next;
-
-};
-</div>
-
-<div class="Des_Word">我们假定这个node在内存中类似下面这个图:
-</div>
-
-<div class="wraptocenter">
-<img class="centerImage" alt="存储任意类型的node" src="pic/cn_node_typenameT_value.PNG" />
-</div>
-
-
-
-<div class="Des_Word">这篇文章是讲数据结构的，模板这一概念已经超出本文的内容，<strong>为简明起见以后我都假定每个元素中存储的数据类型都是int。</strong></div>
-
-<div class="Des_Word">单链表的指向性是单一的，即后一个元素中的指针只存储前一个元素的地址,而前一个元素中的指针不存储后一个的地址，这种链表就成为单链表，权威的定义在<a href="https://zh.wikipedia.org/wiki/%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8" target="_blank">这里</a></div>
-
-<div class="Des_Word">下图是节点存储int值（数值是随机的）的单链表的全景图，假设单链表在内存中起始地址为0x0001</div>
-
-<div class="wraptocenter">
-<img class="centerImage" alt="单链表全景图" src="pic/cn_linked_list_node_all.PNG" />
-</div>
-
-
-</div>
 </body>
 </html>
