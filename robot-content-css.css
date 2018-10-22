@@ -86,7 +86,22 @@ p:first-letter{
 	
 }
 
-
+pre {
+    background: RGB(217,244,244);
+    border: 1px solid #ddd;
+    border-left: 3px solid #f36d33;
+    color: #666;
+    page-break-inside: avoid;
+    font-family: monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 1.6em;
+    max-width: 100%;
+    overflow: auto;
+    padding: 1em 1.5em;
+    display: block;
+    word-wrap: break-word;
+}
 /*
 video style
 <center><video width=80% height=60% src="http://www.youname.com/images/first.mp4" poster="http://www.youname.com/images/first.png"  preload="none" controls="controls"></video></center>

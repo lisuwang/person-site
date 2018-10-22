@@ -25,38 +25,29 @@
   	</section>
 	<section>
 		<h2 class = 'sub-title-1'>定义</h2>
-		<p class = 'article-real-content'>单向链表也叫单链表，它由一个或多个&ldquo;元素&rdquo;连接而成，元素由两部分组成，一个就是真正的数据部分，另一个是指针。假如我们存储的数据部分是int类型的，那么表示这个元素的类如下：</p>
-		<div class = 'code_normal'>struct node{int value;node* next;};</div>
+		<p class = 'article-real-content'>单向链表也叫单链表，它由一个或多个&ldquo;元素&rdquo;连接而成，元素由两部分组成，一个就是真正的数据部分，另一个是指针。链表主要是由一个或多个节点组成，有些链表中还有单独的首节点和尾节点，首节点的数据部分没有意义，但它的next指针里存放第一个真正节点的地址，而尾节点是整个链表的最后一个节点，所以它的next指针为空。除此之外，它们并没有特别之处。只要理解了普通节点的结构就可以理解整个链表。在计算机内存中，链表的每个节点之间的内存分配不一定是连续的，这是它与数组的重要区别。数组正是因为内存分配的连续性可以批量拷贝、移动内部元素，但是链表绝不可以。虽然下面的示例中，每个节点之间的内存地址是连续的，那只是为了方便理解，在现实代码中，绝对不要做这个假设。链表这个数据结构和数组的区别可以类比这样一个例子：在计划经济时代，工厂的职工宿舍都在一起（连续的内存地址），好比一排平房有10间房间，每个房间分配给一家人居住，房间号101,102,103...110;后来市场经济兴起，房地产搞活，工厂不再给职工分配住房了，职工需要购买商品房，这样某小区内的商品房就被卖给不同工厂的职工，原先职工们彼此相连的住房很难再买在一起了（当然也有运气好点的可能还在一起），造成的结果就是各个住户之间并不熟悉，每个人只记得一个同事买在哪个房间（next指针指向的地址），这样就形成了一个链条（链表），如果要通知这个小区的全体职工开个会，就需要（<a href =''>迭代器</a>）挨个职工去通知，先去住户A通知要开会了,然后根据A提供的住户B的地址去找B后，找到后通知B, 再根据B提供的C的地址去找C,依次类推，完成了对全体职工的通知。下面来看一个存储的数据部分是int类型的节点，那么表示这个元素的类如下：</p>
+		<pre><code>struct node{int value;node* next;};</pre></code>
 	</section>
 	<section>
 		<h2 class = 'sub-title-1'>细节</h2>
 		<p class = 'article-real-content'>我们假定这个node在内存中类似下面这个图:</p>
-		<div class = 'code_normal'>struct node{int value;node* next;};</div>
 		<center><p><img width = 50% height = 70% alt="int类型的node" src="pic/cn_node_int_value.PNG"/></p></center>
 			<p class = 'article-real-content' align = 'center'>图1 一个在计算机内存中单链表的结点（数据部分是int类型的值）示意图</p>
 		<p class = 'article-real-content'>假如我们存储的数据部分是std::string类型的，那么表示这个元素的类如下：</p>
-		<div class = 'code_normal'>struct node{
-
-												std::string value;
-
-												node* next;
-
-									};
-		</div>
+		<pre><code>struct node{
+								std::string value;
+								node* next;
+								};
+		</pre></code>
 		<p class = 'article-real-content'>我们假定这个node在内存中类似下面这个图:</p>
 		<center><p><img width = 50% height = 70% alt="存储std::string类型的node" src="pic/cn_node_string_value.PNG"/></p></center>
 			<p class = 'article-real-content' align = 'center'>图2 一个在计算机内存中单链表（数据部分是string类型的值）的结点示意图</p>
 		<p class = 'article-real-content'>为了能够表示任意一种数据类型，使用C++的模板定义如下:</p>
-		<div class = 'code_normal'>template &lt;typename T&gt;
-
-									struct node{
-
-													T value;
-
-													node* next;
-
-									};
-		</div>
+		<pre><code>template&lt;typename T>struct node{
+				T value;
+				node* next;
+		};
+		</pre></code>
 		
 		<p class = 'article-real-content'>我们假定这个node在内存中类似下面这个图:</p>
 		<center><p><img width = 50% height = 70% alt="存储任意类型的node" src="pic/cn_node_typenameT_value.PNG" /></p></center>
@@ -66,6 +57,79 @@
 		<center><p><img width = 80% height = 80% alt="单链表全景图" src="pic/cn_linked_list_node_all.PNG" /></p></center>
 			<p class = 'article-real-content' align = 'center'>图3 一个在计算机内存中由多个节点连接在一起的单链表示意图</p>
 			
+	</section>
+	<section>
+		<h2 class = 'sub-title-1'>操作</h2>
+		<p class = 'article-real-content'>现在开始讨论链表的各种操作：<br>
+创建：如何创建一个单链表呢？其实最小的链表就是只有一个节点。比如下面这个
+<pre><code>node node1{42, NULL};</pre></code>
+这是第一个节点，假设它里面存放着数值42,它的内存地址为001,
+接下来，多创建几个节点，把它们的地址依次放在前一个节点的next指针中就构成了一个完整的链表;
+<pre><code>node node2{43, NULL};</pre></code>
+<pre><code>node node3{44, NULL};</pre></code>
+第二个节点里面存放数值43,它的内存地址为009（为什么是009请读者自己思考下），第三个节点里面存放数值44,它的内存地址为018，接下来把每个节点的next指针中存放下一个节点的内存地址，这样就把它们连在了一起，构成一个链表.
+<pre><code>node1.next = &node2;</pre></code>
+<pre><code>node2.next = &node3;</pre></code>
+我们可以逐个访问（计算机科学中的术语是<a href = ''>遍历</a>）,具体的验证过程在<a href = ' http://tpcg.io/PPQgkq '>这里</a>
+通过上面的解释你应该对单链表的创建有个初步的认识了
+<br>
+删除：如何删除单链表中的一个节点呢？假设我们有的班级学生来的链表，每个节点中存放着关于这个学生的各种信息，忽然有一天，一个学生转学了，那么这个链表需要把这个学生的节点从链表删除掉，怎么做呢？这时需要划分为三种情况考虑：
+1.这个节点是首节点，处理方法:直接删除
+2.这个节点是尾节点，处理方法:把这个节点的前一个节点next指针设置为NULL,然后删除该节点
+3.这个节点是中间的节点，处理办法:把这个节点的前一个节点的next指针设置为这个节点的next指针的值，然后删除该节点
+4.这个节点既是首节点，也是尾节点，即这个班只有这一名同学，处理办法:直接删除
+你会对于情况1和4中的“直接删除”非常不直观，那么为了便于理解，我们引入一个特殊的节点，“首节点”－head，这个节点是在链表的第一个节点之前的节点，它的数值部分没有意义，唯一有用的是它的next指针就是链表第一个真正节点的地址，这样当我们把首节点从链表中删除后，只要把这个head的next指向首节点的next即可，
+为了便于理解，我们分开各自定义对应的函数
+<p class = 'article-real-content'>1.这个节点是首节点，处理方法:直接删除的函数</p>
+<pre><code>void delete_first_node(struct node* p_head) {
+	if (!p_head)
+		return;
+	struct node* will_be_delete = p_head->next;
+	if (will_be_delete) {
+		p_head->next = will_be_delete->next; //setting next value to new one
+	}
+	else {
+		p_head->next = NULL;
+	}
+}</code></pre>
+<p class = 'article-real-content'>2.这个节点是尾节点，处理方法:把这个节点的前一个节点next指针设置为NULL,然后删除该节点的函数</p>
+<pre><code>void delete_last_node(struct node* p_head) {
+	if (!p_head)
+		return;
+	struct node* p = p_head;
+	if (p->next) {
+		while (p->next->next) {
+			p = p->next;
+		}
+	}
+	else {
+		//only one head node     
+	}
+	p->next = NULL; //delete the last node from list
+}</code></pre>
+<p class = 'article-real-content'>3.这个节点是中间的节点，处理办法:把这个节点的前一个节点的next指针设置为这个节点的next指针的值，然后删除该节点的函数</p>
+<pre><code>void delete_node_in_middle(struct node* p_head, struct node* will_be_delete_node) {
+	if (!p_head || !will_be_delete_node)
+		return;
+	struct node* p = p_head;
+	while (p) {
+		if (p->next == will_be_delete_node) {
+			p->next = will_be_delete_node->next;
+			break;
+		}
+		else {
+			p = p->next;
+		}
+	}
+}</code></pre>
+<p class = 'article-real-content'>4.这个节点既是首节点，也是尾节点，即这个班只有这一名同学，处理办法:直接删除的函数</p>
+<pre><code>void delete_only_one_node(struct node* p_head) {
+	if (!p_head)
+		return;
+	p_head->next = NULL;
+}</pre></code>
+当然了，没有一本教科书会这样定义函数，在理解了原理后，我把这几种删除的情况综合到一个函数中,你可以通过注释不同的语句，查看函数的实际功能，具体的验证过程在<a href = ' http://tpcg.io/eB4R1O
+ '>这里</a>，通过上面的解释你应该对单链表的删除有个初步的认识了</p>
 	</section>
 	<section>
 		<img src = '../../article-bottom-line.png' width = 100% height = '20px'/>

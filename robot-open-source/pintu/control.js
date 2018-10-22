@@ -165,7 +165,7 @@ function create_div(root, row, col){
 			root.appendChild(cell);
 		}
 	}
-	setTimeout(10);
+
 	for( i = 0 ; i!= cells.length; i++){
 		if(cells[i].innerText == (row*col).toString()){
 			set_last_element_blank(cells[i]);		
