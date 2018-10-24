@@ -131,7 +131,7 @@ function windowOnClick(event){
 }
 
 function toggleModal(){
-	$("h1").text("真厉害! 花费 "+seconds.toString()+"秒就复原了");
+	$("h1").text("真厉害! 花费"+seconds.toString()+"秒就复原了");
 	modal.classList.toggle("show-modal");
 }
 		
