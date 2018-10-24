@@ -7,7 +7,11 @@ var end_time = null;
 var ROW = 4;
 var COL = 4;
 var cells = [];
-
+var modal = null;
+var trigger = null;
+var closeButton = null;
+var modal_content = null;
+var seconds = null;
 function set_select(val){
 	cur_select = val;
 	val.style.backgroundColor = '#45ADA8';
@@ -105,7 +109,13 @@ function move(a,b){
 }
 //default onload function
 var delay = function(){
+	modal = document.querySelector(".modal");
+	modal_content = document.querySelector(".modal-content");
+	closeButton = document.querySelector(".close-button");
+	window.addEventListener("click",windowOnClick);
+	closeButton.addEventListener("click", toggleModal);
 	var main = document.getElementsByClassName('main-container');
+	
 	var myNode = main[0];
 	while (myNode.firstChild) {
 		myNode.removeChild(myNode.firstChild);
@@ -114,6 +124,17 @@ var delay = function(){
 	start_time = new Date();
 	
 }
+
+function windowOnClick(event){
+		if(event.target == modal)
+			toggleModal();
+}
+
+function toggleModal(){
+	$("h1").text("真厉害! 花费 "+seconds.toString()+"秒就复原了");
+	modal.classList.toggle("show-modal");
+}
+		
 function create_div(root, row, col){
 	var col_text = '';
 	var row_text = '';
@@ -209,7 +230,7 @@ var congSuccess = function (ret){
 	if(ret){
 		end_time = new Date();
 		var elapsed_ms = end_time - start_time;
-		var seconds = Math.round(elapsed_ms / 1000);
+		seconds = Math.round(elapsed_ms / 1000);
 		var minutes = Math.round(seconds / 60);
 		var hours = Math.round(minutes / 60);
 
@@ -221,7 +242,7 @@ var congSuccess = function (ret){
 				return TrimSecondsMinutes(elapsed - 60);
 			return elapsed;
 		}
-		window.alert("You win !!!  花费 "+seconds.toString()+"秒");
+		toggleModal();
 	}
 }
 //statitics the count of '逆序' 
@@ -267,4 +288,12 @@ function generate_right_squence(arr){
 			arr[1] = tmp;
 		}
 	}
+}
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
 }

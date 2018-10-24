@@ -2,6 +2,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <script type="text/javascript" src="control.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html"; charset="utf-8">
 <title>
 拼图游戏
@@ -13,8 +14,15 @@
 拼图列数:
 <input type="text" id="col" value="3">
 <input type="button" value="确定" onclick='get_row_col()'>
-
-<div class = 'main-container'>
+<div class = "modal">
+		<div class = "modal-content">
+			<span class = "close-button">X</span>
+			<h1></h1>
+		</div>
 </div>
+<div class = 'main-container'>
+	
+</div>
+
 </body>
 </html>
