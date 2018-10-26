@@ -2,519 +2,202 @@
 <head>
 	<title>双向链表</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="css/blog.css">
-	<link rel="icon" href="pic/DS_small_icon.png" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="../../robot-content-css.css" />
+	<link rel="icon" href="pic/DS_small_icon.png" type="image/x-icon"> 
 </head>
 
 <body >
-<div class="Brs"></div>
-<div class="Head_Tip"></div>
-<h1 style="text-align: center;">双向链表</h1>
-
-
-<div class="Just_Tip">Patient man, can get what he wanted, give me 15 minutes</div>
-
-<h2>定义:</h2>
-
-<div class="Des_Word">双向链表由一个或多个&ldquo;元素&rdquo;连接而成，元素由三部分组成，一个就是真正的数据部分，另一个是previous指针, 最后一个是next指针。
-</div>
-
-<div class="Des_Word">假如我们存储的数据部分是int类型的，那么表示这个元素的类如下：</div>
-
-<div class="Code_C" id="real_code_cpp_struct_int_node" lang="C">
-struct node{
-
-int value;
-
-node* previous;
-
-node* next;
-
-};
-</div>
-
-<div class="Des_Word">我们假定这个node在内存中类似下面这个图:</div>
-<div class="wraptocenter">
-<img class="centerImage" alt="双向链表的node中存储int类型的值" src="pic/cn_doubly_linkedlist_node_int_value.PNG" />
-</div>
-
-
-
-<div class="Des_Word">假如我们存储的数据部分是std::string类型的，那么表示这个元素的类如下：
-</div>
-
-<div class="Code_C" id="real_code_string_node" lang="C">
-struct node{
-
-std::string value;
-
-node* prevoius;
-
-node* next;
-
-
-};
-</div>
-
-<div class="Des_Word">我们假定这个node在内存中类似下面这个图:
-</div>
-
-<div class="wraptocenter">
-<img class="centerImage" alt="双向链表中node存储的std::string类型的值" src="pic/cn_doubly_linkedlist_node_string_value.PNG" />
-</div>
-
-
-
-<div class="Des_Word">为了能够表示任意一种数据类型，使用C++的模板定义如下:
-</div>
-
-<div class="Code_C" id="real_code_typenameT_node" lang="C">
-template &lt;typename T&gt;
-
-struct node{
-
-T value;
-
-node* prevoius;
-
-node* next;
-
-};
-</div>
-
-<div class="Des_Word">我们假定这个node在内存中类似下面这图:
-</div>
-
-<div class="wraptocenter">
-<img class="centerImage" alt="双向链表中node存储的任意类型的值" src="pic/cn_doubly_linkedlist_node_typenameT_value.PNG" />
-</div>
-
-
-<div class="Des_Word">这篇文章是讲数据结构的，模板这一概念已经超出本文的内容，<strong>为简明起见以后我都假定每个元素中存储的数据类型都是int。</strong>
-</div>
-
-<div class="Des_Word">双向链表是链表中每一个元素结构中都会存储两个地址，其中一个存储它的前一个元素地址，另一个存储它的后一个元素地址，权威的定义在<a href="http://zh.wikipedia.org/wiki/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8" target="_blank">这里</a></div>
-
-<div class="Des_Word">见下图所示,假设双向链表在内存中起始地址为0x0001：</div>
-
-
-<div class="wraptocenter">
-<img class="centerImage" alt="双向链表整体示意图" src="pic/cn_doubly_linked_list_node_all.PNG" /></div>
-
-<h2>操作:</h2>
-
-<div class="Des_Word">为了聚焦在数据结构的讲解，<strong>我不想涉及太多和语言相关的细节，并且假定这个链表不允许有重复元素，使用C语言来实现整个过程</strong>，至于<a>C++</a>，<a>python</a>, <a>Javascript</a>,<a>php</a> 的版本可以参考多个文章，定义以下函数:</div>
-<div>
-<ul>
-    <li><a href="#">查找</a></li>
-    <li><a href="#">删除</a></li>
-    <li><a href="#">在起始结点之前插入</a></li>
-    <li><a href="#">在起始节点之后插入</a></li>
-    <li><a href="#">正向遍历</a></li>
-	<li><a href="#">反向遍历</a></li>
-</ul>
-
-</div>
-<div class="Code_C" id="real_code_doubly_linked_list_node" lang="C">struct node
-
-{
-
-int value;
-
-struct node *previous;
-
-struct node *next;
-
-};
-
-</div>
-
-<div class="Code_C_Function" id="real_code_doubly_linked_list_fun_find" lang="C" style="background:#eee;border:1px solid #ccc;padding:5px 10px;">
-<div>/*</div>
-
-<div>查找，找到一个结点的值等于val,就返回这个结点，否则，返回空指针</div>
-
-<div>*/</div>
-
-<div>struct node *</div>
-
-<div>find (struct node *begin, int val)</div>
-
-<div>{</div>
-
-<div>&nbsp; if (!begin)</div>
-
-<div>&nbsp; &nbsp; return NULL;</div>
-
-<div>&nbsp; struct node *tmp = begin;</div>
-
-<div>&nbsp; while (tmp)</div>
-
-<div>&nbsp; &nbsp; {</div>
-
-<div>&nbsp; &nbsp; &nbsp; if (tmp-&gt;value == val)</div>
-
-<div>return tmp;</div>
-
-<div>&nbsp; &nbsp; &nbsp; tmp = tmp-&gt;next;</div>
-
-<div>&nbsp; &nbsp; }</div>
-
-<div>&nbsp; return NULL;</div>
-
-<div>}</div>
-</div>
-
-<div class="Code_C_Function" id="real_code_struct_doubly_linked_list_fun_del" lang="C" style="background:#eee;border:1px solid #ccc;padding:5px 10px;">/*<br />
-删除，找到一个结点的值等于val,就删除这个结点，如果这个结点不是双向链表的起始节点，直接删除该节点，如果这个节点恰好就是起始节点，删除起始节点后，还要再把起始节点更新为下一个节点，否则，返回
-
-
-<div>*/</div>
-
-<p>void<br />
-del (struct node **begin, int val)<br />
-{<br />
-&nbsp; struct node *ret = find (*begin, val);<br />
-&nbsp; if (ret &amp;&amp; ret != *begin)<br />
-&nbsp; &nbsp; {<br />
-&nbsp; &nbsp; &nbsp; struct node *n = ret-&gt;next;<br />
-&nbsp; &nbsp; &nbsp; struct node *p = ret-&gt;previous;<br />
-&nbsp; &nbsp; &nbsp; p-&gt;next = ret-&gt;next;<br />
-&nbsp; &nbsp; &nbsp; n?n-&gt;previous = ret-&gt;previous:NULL;<br />
-&nbsp; &nbsp; &nbsp; free (ret);<br />
-&nbsp; &nbsp; &nbsp; return;<br />
-&nbsp; &nbsp; }<br />
-&nbsp; else if (ret == *begin)<br />
-&nbsp; &nbsp; {<br />
-&nbsp; &nbsp; &nbsp; struct node *n = ret-&gt;next;<br />
-&nbsp; &nbsp; &nbsp; n-&gt;previous = NULL;<br />
-&nbsp; &nbsp; &nbsp; free (ret);<br />
-&nbsp; &nbsp; &nbsp; *begin = n;<br />
-&nbsp; &nbsp; &nbsp; return;<br />
-&nbsp; &nbsp; }<br />
-&nbsp; else<br />
-&nbsp; &nbsp; {<br />
-&nbsp;<br />
-&nbsp; &nbsp; }<br />
-}</p></div>
-</div>
-
-<div>&nbsp;</div>
-
-<div>删除过程的详细步骤，见下图：</div>
-
-<div class="wraptocenter">
-<img class="centerImage" alt="删除结点的第一种情况" src="pic/cn_doubly_linkedlist_node_fun_del_1.PNG" />
+<div class = 'robot-share-article-content'>
+<section hidden = 'hidden'>
+<img src = 'article-rose.png' width = 10% height = 10%/>
+</section>
+<section>
+	<h1 class = 'article-title'>双向链表</h1> 
+	<section>
+		<p></p>
+    		<h2 class = 'sub-title-1'>阅读完成本文后您将收获</h2>
+    		<p class = 'article-real-content'>
+						<ui>
+							<li style="margin-left:2em; ">理解双向链表这个重要的数据结构<br></li>
+							<li style="margin-left:2em; ">掌握双向链表的各种操作<br></li>
+							<li style="margin-left:2em; ">能够自定义双向链表，并实现它<br></li>
+						</ui>
+			</p>
+  	</section>
+	<section>
+		<h2 class = 'sub-title-1'>定义</h2>
+		<p class = 'article-real-content'>双向链表由一个或多个&ldquo;元素&rdquo;连接而成，元素由三部分组成，一个就是真正的数据部分，另一个是previous指针, 这个指针内部存放着当前元素之前的那个元素的内存地址，如果当前节点是
+		首节点，则previous指针内存放NULL，最后一个是next指针，它内部存放着在它之后的那个节点的内存地址，如果当前节点是双向链表的最后一个元素，则
+		next指针内存放NULL。举个生活中的例子，幼儿园一个班的小朋友排成一队做游戏，每个小朋友（是链表的节点）的左右手都分别拉着别的小朋友的小手，
+		这里的小手就类似于"previous"和"next"指针，通过这两个指针，
+		每个小朋友都知道自己的"前后"小朋友是谁，在队首的小朋友previous指针为空，在队尾的小朋友next为空；
+		在特殊的情况下，这个班只有一个小朋友，那么这个小朋友的previous和next指针都为空。简化一下问题，如果每个小朋友代表一个int值，
+		如果用C语言可将节点使用如下数据结构表示，即双向链表：</p>
+		<pre><code>struct node{
+				int value;
+				node* previous;
+				node* next;
+		};
+		</pre></code>
+	</section>
+	<section>
+		<h2 class = 'sub-title-1'>细节</h2>
+		<p class = 'article-real-content'>我们假定这个node在内存中类似下面这个图:</p>
+		<center><p><img width = 80% height = '30%' alt="int类型的node" src="pic/cn_doubly_linkedlist_node_int_value.PNG"/></p></center>
+			<p class = 'article-real-content' align = 'center'>图1 一个在计算机内存中单链表的结点（数据部分是int类型的值）示意图</p>
+		<p class = 'article-real-content'>假如我们存储的数据部分是std::string类型的，那么表示这个元素的类如下：</p>
+		<pre><code>struct node{
+				std::string value;
+				node* prevoius;
+				node* next;
+		};
+		</pre></code>
+		<p class = 'article-real-content'>我们假定这个node在内存中类似下面这个图:</p>
+		<center><p><img width = 80% height = 60% alt="存储std::string类型的node" src="pic/cn_doubly_linkedlist_node_string_value.PNG"/></p></center>
+			<p class = 'article-real-content' align = 'center'>图2 一个在计算机内存中单链表（数据部分是string类型的值）的结点示意图</p>
+		<p class = 'article-real-content'>为了能够表示任意一种数据类型，使用C++的模板定义如下:</p>
+		<pre><code>template &lt;typename T&gt;struct node{
+				T value;
+				node* prevoius;
+				node* next;
+		};
+		</pre></code>
+		
+		<p class = 'article-real-content'>我们假定这个node在内存中类似下面这个图:</p>
+		<center><p><img width = 80% height = 60% alt="存储任意类型的node" src="pic/cn_doubly_linkedlist_node_typenameT_value.PNG" /></p></center>
+			<p class = 'article-real-content' align = 'center'>图3 一个在计算机内存中双向链表（数据部分是任意类型的值）的结点示意图</p>			
+		<p class = 'article-real-content'>这篇文章是讲数据结构的，模板这一概念已经超出本文的内容，
+		<strong>为简明起见以后我都假定每个元素中存储的数据类型都是int。</strong>
+		
+		见下图所示,假设双向链表在内存中起始地址为0x0001：</p>
+		<center><p><img width = 80% height = 60% alt="双向链表整体示意图" src="pic/cn_doubly_linked_list_node_all.PNG"  /></p></center>
+			<p class = 'article-real-content' align = 'center'>图4 一个在计算机内存中双向链表各结点示意图</p>
+	</section>
+	<section>
+		<h2 class = 'sub-title-1'>操作</h2>
+		<p class = 'article-real-content'>为了聚焦在数据结构的讲解，<strong>我不想涉及太多和语言相关的细节，并且假定这个链表的节点内存放int 类型值且没有重复元素，使用C语言来实现整个过程</strong>，至于<a href = ''>C++</a>，<a href = ''>python</a>, <a href = ''>Javascript</a>,<a href = ''>php</a> 的版本可以参考这几种语言的实现版本，定义以下函数:</p>
+		<pre><code>struct node{
+				int value;
+				node* previous;
+				node* next;
+		};
+		</pre></code>
+		<ul>
+			<li><a href="#find">查找</a></li>
+			<li><a href="#del">删除</a></li>
+			<li><a href="#insert_before">在起始结点之前插入</a></li>
+			<li><a href="#insert_after">在起始节点之后插入</a></li>
+			<li><a href="#travel">正向遍历</a></li>
+			<li><a href="#reverse_travel">反向遍历</a></li>
+		</ul>
+		<p class = 'article-real-content'><a name = 'find'>查找</a>，找到一个结点的值等于val,就返回这个结点，否则，返回空指针</p>
+		<pre><code>struct node *
+					find (struct node *begin, int val){
+					if (!begin)
+						return NULL;
+					struct node *tmp = begin;
+					while (tmp){
+						if (tmp->value == val)
+							return tmp;
+						tmp = tmp->next;
+					}
+					return NULL;
+			}
+		</pre></code>
+		<p class = 'article-real-content'><a name = 'del'>删除</a>，找到一个结点的值等于val,就删除这个结点，如果这个结点不是双向链表的起始节点，直接删除该节点，如果这个节点恰好就是起始节点，删除起始节点后，还要再把起始节点更新为下一个节点，否则，返回</p>
+		<pre><code>void
+					del (struct node **begin, int val){
+					struct node *ret = find (*begin, val);
+					if (ret && ret != *begin){
+						struct node *n = ret->next;
+						struct node *p = ret->previous;
+						p->next = ret->next;
+						n?n->previous = ret->previous:NULL;
+						free (ret);
+						return;
+					}else if (ret == *begin){
+						struct node *n = ret->next;
+						n->previous = NULL;
+						free (ret);
+						*begin = n;
+						return;
+					}else{
+					}
+			}
+		</pre></code>
+		
+		<p class = 'article-real-content'>删除过程的详细步骤，见下图：</p>
+		<center><p><img width = 80% height = 60% alt="删除结点的第一种情况" src="pic/cn_doubly_linkedlist_node_fun_del_1.PNG"  /></p></center>
+		<center><p><img width = 80% height = 60% alt="删除结点的第二种情况" src="pic/cn_doubly_linkedlist_node_fun_del_2.PNG"  /></p></center>	
+		<p class = 'article-real-content'><a name = 'insert_before'>前插入</a>,在双向链表的开始结点之前插入元素，这个元素的值等于val,因为插入元素后，需要修改开始结点，所以这里传入的参数是双重指针</p>
+		<pre><code>int
+					insert_before (struct node **begin, int val){
+					if (!begin)
+						return 0;
+					struct node *n = (*begin)->next;
+					struct node *tmp = malloc (sizeof (struct node));
+					tmp->value = val;
+					tmp->next = *begin;
+					tmp->previous = NULL;
+					(*begin)->previous = tmp;
+					*begin = tmp;
+					return 1;
+				}
+		</pre></code>
+		<p class = 'article-real-content'>这个插入的过程详细过程，见下图：</p>
+		<center><p><img width = 80% height = 60% alt="双向链表插入结点" src="pic/cn_doubly_linkedlist_node_fun_insert_before.PNG"  /></p></center>
+	
+		<p class = 'article-real-content'><a name = 'insert_after'>后插入</a>,在双向链表的开始结点之后，插入一个元素，这个元素的值等于val</p>
+		<pre><code>int
+					insert_after (struct node *begin, int val){
+					if (!begin)
+						return 0;
+					struct node *n = begin->next;
+					struct node *tmp = malloc (sizeof (struct node));
+					tmp->value = val;
+					tmp->next = n;
+					tmp->previous = begin;
+					begin->next = tmp;
+					return 1;
+				}
+		</pre></code>
+		<p class = 'article-real-content'>这个插入的过程详细过程，见下图：</p>
+		<center><p><img width = 80% height = 60% alt="双向链表在开始结点之后插入结点" src="pic/cn_doubly_linkedlist_node_fun_insert_after.PNG"  /></p></center>
+	
+		<p class = 'article-real-content'><a name = 'travel'>正向遍历</a></p>
+		<pre><code>void
+					travel (struct node *begin){
+					if (!begin)
+						return;
+					printf ("%d ", begin->value);
+					travel (begin->next);
+				}
+		</pre></code>
+		<p class = 'article-real-content'><a name = 'reverse_travel'>反向遍历</a></p>
+		<pre><code>void
+					reverse_travel (struct node *begin){
+					if (!begin)
+						return;
+					reverse_travel (begin->next); //使用递归的方式完成遍历，请读者仔细理解下
+					printf ("%d ", begin->value);
+				}
+		</pre></code>
+		<p class = 'article-real-content'>最后，所有这些方法都通过检验，你可以在<a href = '  http://tpcg.io/pjmFBa '>这里</a>找到完整的验证过程</p>
+	</section>
+		<p class = 'article-real-content'>我在写这篇文章时参考了的以下链接</p>
+		<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-s096-effective-programming-in-c-and-c-january-iap-2014/assignments/MIT6_S096IAP14_ass2_p1.pdf" target="_blank">https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-s096-effective-programming-in-c-and-c-january-iap-2014/assignments/MIT6_S096IAP14_ass2_p1.pdf</a><br/>
+		<a href="https://en.wikipedia.org/wiki/Doubly_linked_list" target="_blank">https://en.wikipedia.org/wiki/Doubly_linked_list</a><br/>
+		<a href="https://www.geeksforgeeks.org/doubly-linked-list/" target="_blank">https://www.geeksforgeeks.org/doubly-linked-list/</a><br/>
+		<a href="https://www.youtube.com/watch?v=k0pjD12bzP0" target="_blank">https://www.youtube.com/watch?v=k0pjD12bzP0</a><br/>
+		<a href="https://www.tutorialspoint.com/data_structures_algorithms/doubly_linked_list_algorithm.htm" target="_blank">https://www.tutorialspoint.com/data_structures_algorithms/doubly_linked_list_algorithm.htm</a><br/>
+		<a href="http://btechsmartclass.com/DS/U1_T12.html" target="_blank">http://btechsmartclass.com/DS/U1_T12.html</a><br/>
+		<a href="https://gist.github.com/mycodeschool/7429492" target="_blank">https://gist.github.com/mycodeschool/7429492</a><br/>
+	<section>
+	</section>
+</section>
 </div>
 
 
-
-<div class="wraptocenter">
-<img class="centerImage" alt="删除结点的第二种情况" src="pic/cn_doubly_linkedlist_node_fun_del_2.PNG" />
-</div>
-
-
-<div class="Code_C_Function" id="real_code_doubly_linked_list_fun_insert" lang="C" style="background:#eee;border:1px solid #ccc;padding:5px 10px;">
-<div>/*</div>
-
-<div>在双向链表的开始结点之前插入元素，这个元素的值等于val,因为插入元素后，需要修改开始结点，所以这里传入的参数是双重指针</div>
-
-<div>*/</div>
-
-<div>int</div>
-
-<div>insert_before (struct node **begin, int val)</div>
-
-<div>{</div>
-
-<div>&nbsp; if (!begin)</div>
-
-<div>&nbsp; &nbsp; return 0;</div>
-
-<div>&nbsp; struct node *n = (*begin)-&gt;next;</div>
-
-<div>&nbsp; struct node *tmp = malloc (sizeof (struct node));</div>
-
-<div>&nbsp; tmp-&gt;value = val;</div>
-
-<div>&nbsp; tmp-&gt;next = *begin;</div>
-
-<div>&nbsp; tmp-&gt;previous = NULL;</div>
-
-<div>&nbsp; (*begin)-&gt;previous = tmp;</div>
-
-<div>&nbsp; *begin = tmp;</div>
-
-<div>&nbsp; return 1;</div>
-
-<div>}</div>
-</div>
-
-<div>这个插入的过程详细过程，见下图：</div>
-
-<div class="wraptocenter">
-<img class="centerImage" alt="双向链表插入结点" src="pic/cn_doubly_linkedlist_node_fun_insert_before.PNG"  />
-</div>
-
-
-
-<div class="Code_C_Function" id="real_code_doubly_linked_list_fun_insert_after" lang="C" style="background:#eee;border:1px solid #ccc;padding:5px 10px;">
-<div>/*</div>
-
-<div>在双向链表的开始结点之后，插入一个元素，这个元素的值等于val</div>
-
-<div>*/</div>
-
-<div>int</div>
-
-<div>insert_after (struct node *begin, int val)</div>
-
-<div>{</div>
-
-<div>&nbsp; if (!begin)</div>
-
-<div>&nbsp; &nbsp; return 0;</div>
-
-<div>&nbsp; struct node *n = begin-&gt;next;</div>
-
-<div>&nbsp; struct node *tmp = malloc (sizeof (struct node));</div>
-
-<div>&nbsp; tmp-&gt;value = val;</div>
-
-<div>&nbsp; tmp-&gt;next = n;</div>
-
-<div>&nbsp; tmp-&gt;previous = begin;</div>
-
-<div>&nbsp; begin-&gt;next = tmp;</div>
-
-<div>&nbsp; return 1;</div>
-
-<div>}</div>
-
-<div>&nbsp;</div>
-</div>
-
-<div>这个插入的过程详细过程，见下图：</div>
-
-<div class="wraptocenter">
-<img class="centerImage" alt="双向链表在开始结点之后插入结点" src="pic/cn_doubly_linkedlist_node_fun_insert_after.PNG" />
-</div>
-
-
-
-<div class="Code_C_Function" id="real_code_doubly_linked_list_fun_travl" lang="C" style="background:#eee;border:1px solid #ccc;padding:5px 10px;">
-<div>/*</div>
-
-<div>前向遍历</div>
-
-<div>*/</div>
-
-<div>void</div>
-
-<div>travel (struct node *begin)</div>
-
-<div>{</div>
-
-<div>&nbsp; if (!begin)</div>
-
-<div>&nbsp; &nbsp; return;</div>
-
-<div>&nbsp; printf (&quot;%d &quot;, begin-&gt;value);</div>
-
-<div>&nbsp; travel (begin-&gt;next);</div>
-
-<div>}</div>
-</div>
-
-<div>&nbsp;</div>
-
-<div class="Code_C_Function" id="real_code_doubly_linked_list_reverse_travl" lang="C" style="background:#eee;border:1px solid #ccc;padding:5px 10px;">
-<div>/*<br />
-反向遍历<br />
-*/</div>
-
-<div>void</div>
-
-<div>reverse_travel (struct node *begin)</div>
-
-<div>{</div>
-
-<div>&nbsp; if (!begin)</div>
-
-<div>&nbsp; &nbsp; return;</div>
-
-<div>&nbsp; reverse_travel (begin-&gt;next);</div>
-
-<div>&nbsp; printf (&quot;%d &quot;, begin-&gt;value);</div>
-
-<div>&nbsp;</div>
-
-<div>}</div>
-</div>
-
-<div class="Code_C_Function" id="real_code_doubly_linked_list_fun_insert_after" lang="C" style="background:#eee;border:1px solid #ccc;padding:5px 10px;">
-/*<br />
-这是完整的测试程序，在https://www.onlinegdb.com/online_c_compiler 验证无误<br />
-*/<br />
-struct node { int value; struct node *previous; struct node *next; };<br />
-struct node *<br />
-find (struct node *begin, int val)<br />
-{<br />
-&nbsp; if (!begin)<br />
-&nbsp; &nbsp; return NULL;<br />
-&nbsp; struct node *tmp = begin;<br />
-&nbsp; while (tmp)<br />
-&nbsp; &nbsp; {<br />
-&nbsp; &nbsp; &nbsp; if (tmp-&gt;value == val)<br />
-return tmp;<br />
-&nbsp; &nbsp; &nbsp; tmp = tmp-&gt;next;<br />
-&nbsp; &nbsp; }<br />
-&nbsp; return NULL;<br />
-}</p>
-
-<p>void<br />
-del (struct node **begin, int val)<br />
-{<br />
-&nbsp; struct node *ret = find (*begin, val);<br />
-&nbsp; if (ret &amp;&amp; ret != *begin)<br />
-&nbsp; &nbsp; {<br />
-&nbsp; &nbsp; &nbsp; struct node *n = ret-&gt;next;<br />
-&nbsp; &nbsp; &nbsp; struct node *p = ret-&gt;previous;<br />
-&nbsp; &nbsp; &nbsp; p-&gt;next = ret-&gt;next;<br />
-&nbsp; &nbsp; &nbsp; n?n-&gt;previous = ret-&gt;previous:NULL;<br />
-&nbsp; &nbsp; &nbsp; free (ret);<br />
-&nbsp; &nbsp; &nbsp; return;<br />
-&nbsp; &nbsp; }<br />
-&nbsp; else if (ret == *begin)<br />
-&nbsp; &nbsp; {<br />
-&nbsp; &nbsp; &nbsp; struct node *n = ret-&gt;next;<br />
-&nbsp; &nbsp; &nbsp; n-&gt;previous = NULL;<br />
-&nbsp; &nbsp; &nbsp; free (ret);<br />
-&nbsp; &nbsp; &nbsp; *begin = n;<br />
-&nbsp; &nbsp; &nbsp; return;<br />
-&nbsp; &nbsp; }<br />
-&nbsp; else<br />
-&nbsp; &nbsp; {<br />
-&nbsp;<br />
-&nbsp; &nbsp; }<br />
-}</p>
-
-<p>int<br />
-insert_before (struct node **begin, int val)<br />
-{<br />
-&nbsp; if (!begin)<br />
-&nbsp; &nbsp; return 0;<br />
-&nbsp; struct node *n = (*begin)-&gt;next;<br />
-&nbsp; struct node *tmp = malloc (sizeof (struct node));<br />
-&nbsp; tmp-&gt;value = val;<br />
-&nbsp; tmp-&gt;next = *begin;<br />
-&nbsp; tmp-&gt;previous = NULL;<br />
-&nbsp; (*begin)-&gt;previous = tmp;<br />
-&nbsp; *begin = tmp;<br />
-&nbsp; return 1;<br />
-}</p>
-
-<p>int<br />
-insert_after (struct node *begin, int val)<br />
-{<br />
-&nbsp; if (!begin)<br />
-&nbsp; &nbsp; return 0;<br />
-&nbsp; struct node *n = begin-&gt;next;<br />
-&nbsp; struct node *tmp = malloc (sizeof (struct node));<br />
-&nbsp; tmp-&gt;value = val;<br />
-&nbsp; tmp-&gt;next = n;<br />
-&nbsp; tmp-&gt;previous = begin;<br />
-&nbsp; begin-&gt;next = tmp;<br />
-&nbsp; return 1;<br />
-}</p>
-
-<p>void<br />
-travel (struct node *begin)<br />
-{<br />
-&nbsp; if (!begin)<br />
-&nbsp; &nbsp; return;<br />
-&nbsp; printf (&quot;%d &quot;, begin-&gt;value);<br />
-&nbsp; travel (begin-&gt;next);<br />
-}</p>
-
-<p>void<br />
-reverse_travel (struct node *begin)<br />
-{<br />
-&nbsp; if (!begin)<br />
-&nbsp; &nbsp; return;<br />
-&nbsp; reverse_travel (begin-&gt;next);<br />
-&nbsp; printf (&quot;%d &quot;, begin-&gt;value);<br />
-&nbsp;<br />
-}</p>
-
-<p>int main(){<br />
-struct node* head = malloc(sizeof(struct node));<br />
-&nbsp; &nbsp; head-&gt;value = 42;<br />
-&nbsp; &nbsp; head-&gt;previous = NULL;<br />
-&nbsp; &nbsp; head-&gt;next = NULL;<br />
-&nbsp; &nbsp;&nbsp;<br />
-&nbsp; &nbsp; struct node* one = malloc(sizeof(struct node));<br />
-&nbsp; &nbsp; one-&gt;value = 41;<br />
-&nbsp; &nbsp; one-&gt;previous = NULL;<br />
-&nbsp; &nbsp; one-&gt;next = NULL;<br />
-&nbsp; &nbsp;&nbsp;<br />
-&nbsp; &nbsp; struct node* two = malloc(sizeof(struct node));<br />
-&nbsp; &nbsp; two-&gt;value = 40;<br />
-&nbsp; &nbsp; two-&gt;previous = NULL;<br />
-&nbsp; &nbsp; two-&gt;next = NULL;<br />
-&nbsp; &nbsp;&nbsp;<br />
-&nbsp; &nbsp; struct node* three = malloc(sizeof(struct node));<br />
-&nbsp; &nbsp; three-&gt;value = 39;<br />
-&nbsp; &nbsp; three-&gt;previous = NULL;<br />
-&nbsp; &nbsp; three-&gt;next = NULL;<br />
-&nbsp; &nbsp;&nbsp;<br />
-&nbsp; &nbsp; head-&gt;next = one;<br />
-&nbsp; &nbsp; one-&gt;previous = head;<br />
-&nbsp; &nbsp;&nbsp;<br />
-&nbsp; &nbsp; one-&gt;next = two;<br />
-&nbsp; &nbsp; two-&gt;previous = one;<br />
-&nbsp; &nbsp;&nbsp;<br />
-&nbsp; &nbsp; two-&gt;next = three;<br />
-&nbsp; &nbsp; three-&gt;previous = two;<br />
-&nbsp; &nbsp;&nbsp;<br />
-&nbsp; &nbsp; travel(head);<br />
-&nbsp; &nbsp; printf(&quot;\n&quot;);<br />
-&nbsp; &nbsp; del(&amp;head,39);<br />
-&nbsp; &nbsp;&nbsp;<br />
-&nbsp; &nbsp; travel(head);<br />
-&nbsp; &nbsp; printf(&quot;\n&quot;);<br />
-&nbsp; &nbsp; del(&amp;head,42);<br />
-&nbsp; &nbsp;&nbsp;<br />
-&nbsp; &nbsp; travel(head);<br />
-&nbsp; &nbsp; printf(&quot;\n&quot;);<br />
-&nbsp; &nbsp; insert_before(&amp;head,43);<br />
-&nbsp; &nbsp; travel(head);<br />
-&nbsp; &nbsp; printf(&quot;\n&quot;);<br />
-&nbsp; &nbsp; insert_after(head, 0);</p>
-
-<p>&nbsp; &nbsp; travel(head);<br />
-&nbsp; &nbsp; printf(&quot;\n&quot;);<br />
-&nbsp; &nbsp; reverse_travel(head);<br />
-&nbsp; &nbsp; return 42;<br />
-}</div>
-
-<div class="Code_C_Function">输出结果:<br />
-42 41 40 39<br />
-42 41 40<br />
-41 40<br />
-43 41 40<br />
-43 0 41 40<br />
-40 41 0 43<br />
-</div>
-<div class="Simple_Refer">参考资料：<br /><br /><br /></div>
-<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-s096-effective-programming-in-c-and-c-january-iap-2014/assignments/MIT6_S096IAP14_ass2_p1.pdf" target="_blank">https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-s096-effective-programming-in-c-and-c-january-iap-2014/assignments/MIT6_S096IAP14_ass2_p1.pdf</a><br/>
-<a href="https://en.wikipedia.org/wiki/Doubly_linked_list" target="_blank">https://en.wikipedia.org/wiki/Doubly_linked_list</a><br/>
-<a href="https://www.geeksforgeeks.org/doubly-linked-list/" target="_blank">https://www.geeksforgeeks.org/doubly-linked-list/</a><br/>
-<a href="https://www.youtube.com/watch?v=k0pjD12bzP0" target="_blank">https://www.youtube.com/watch?v=k0pjD12bzP0</a><br/>
-<a href="https://www.tutorialspoint.com/data_structures_algorithms/doubly_linked_list_algorithm.htm" target="_blank">https://www.tutorialspoint.com/data_structures_algorithms/doubly_linked_list_algorithm.htm</a><br/>
-<a href="http://btechsmartclass.com/DS/U1_T12.html" target="_blank">http://btechsmartclass.com/DS/U1_T12.html</a><br/>
-<a href="https://gist.github.com/mycodeschool/7429492" target="_blank">https://gist.github.com/mycodeschool/7429492</a><br/>
-<div class="Brs"></div>
 
 </body>
 </html>
