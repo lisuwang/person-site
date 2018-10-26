@@ -2,8 +2,9 @@
 <head>
 	<title>双向链表</title>
 	<meta charset="utf-8">
+	<meta name="keywords" content="数据结构,双向链表,list,keywords" /> 
 	<link rel="stylesheet" type="text/css" href="../../robot-content-css.css" />
-	<link rel="icon" href="pic/DS_small_icon.png" type="image/x-icon"> 
+	<link rel="icon" href="pic/DS_small_icon.PNG" type="image/x-icon"> 
 </head>
 
 <body >
@@ -44,7 +45,7 @@
 		<h2 class = 'sub-title-1'>细节</h2>
 		<p class = 'article-real-content'>我们假定这个node在内存中类似下面这个图:</p>
 		<center><p><img width = 80% height = '30%' alt="int类型的node" src="pic/cn_doubly_linkedlist_node_int_value.PNG"/></p></center>
-			<p class = 'article-real-content' align = 'center'>图1 一个在计算机内存中单链表的结点（数据部分是int类型的值）示意图</p>
+			<p class = 'article-real-content' align = 'center'>图1 一个在计算机内存中双向链表的结点（数据部分是int类型的值）示意图</p>
 		<p class = 'article-real-content'>假如我们存储的数据部分是std::string类型的，那么表示这个元素的类如下：</p>
 		<pre><code>struct node{
 				std::string value;
@@ -54,7 +55,7 @@
 		</pre></code>
 		<p class = 'article-real-content'>我们假定这个node在内存中类似下面这个图:</p>
 		<center><p><img width = 80% height = 60% alt="存储std::string类型的node" src="pic/cn_doubly_linkedlist_node_string_value.PNG"/></p></center>
-			<p class = 'article-real-content' align = 'center'>图2 一个在计算机内存中单链表（数据部分是string类型的值）的结点示意图</p>
+			<p class = 'article-real-content' align = 'center'>图2 一个在计算机内存中双向链表（数据部分是string类型的值）的结点示意图</p>
 		<p class = 'article-real-content'>为了能够表示任意一种数据类型，使用C++的模板定义如下:</p>
 		<pre><code>template &lt;typename T&gt;struct node{
 				T value;
